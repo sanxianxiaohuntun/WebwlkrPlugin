@@ -2,6 +2,8 @@ import re
 import requests
 import random
 from bs4 import BeautifulSoup
+import time
+import os
 
 
 __site_adapters__ = []
@@ -52,20 +54,27 @@ class SiteAdapterBase:
         return True
 
     @classmethod
-    def get_html(cls, url: str, timeout: int=10) -> (int, str):
-        """获取网页的HTML内容
-        
-        反反爬策略应该在此应用
-        """
-        r = requests.get(
-            url,
-            timeout=timeout,
-            headers={
-                'User-Agent': random.choice(user_agents)
-            }
-        )
-        
-        return r.status_code, r.text
+    def get_html(cls, url: str, timeout: int=10, max_retries=3) -> (int, str):
+        """获取网页的HTML内容,支持重试"""
+        for i in range(max_retries):
+            try:
+                proxies = {
+                    'http': os.getenv('HTTP_PROXY'),
+                    'https': os.getenv('HTTPS_PROXY')
+                }
+                r = requests.get(
+                    url,
+                    timeout=timeout,
+                    proxies=proxies,
+                    headers={
+                        'User-Agent': random.choice(user_agents)
+                    }
+                )
+                return r.status_code, r.text
+            except Exception as e:
+                if i == max_retries - 1:
+                    raise e
+                time.sleep(1)  # 重试前等待
 
     @classmethod
     def extra_plain(cls, raw_html: str) -> str:

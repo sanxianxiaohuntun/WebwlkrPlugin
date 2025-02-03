@@ -73,6 +73,14 @@ class GithubRepoSiteAdapter(SiteAdapterBase):
 
         briefs.append("brief raw: "+raw)
 
+        # 提取仓库基本信息
+        briefs = cls.regexp_brief(raw_html, "Stars", r'aria-label="([\d,]+) users starred this repository"', briefs)
+        briefs = cls.regexp_brief(raw_html, "Forks", r'aria-label="([\d,]+) users forked this repository"', briefs)
+        briefs = cls.regexp_brief(raw_html, "Description", r'<p class="f4 my-3">(.*?)</p>', briefs)
+        
+        # 提取README内容
+        briefs = cls.regexp_brief(raw_html, "README", r'<article class="markdown-body.*?">(.*?)</article>', briefs)
+
         return cls.make_ret(
             status_code=status_code,
             message="ok",

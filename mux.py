@@ -1,11 +1,32 @@
 import re
 import logging
+import time
+import yaml
 
 from .sites import model
+from .cache import Cache
 
+# 读取配置
+try:
+    with open("webwlkr.yaml", "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+except Exception as e:
+    logging.error(f"Failed to load config: {e}")
+    config = {}
+
+# 创建缓存实例，使用默认值
+cache = Cache(
+    expire_time=config.get('cache', {}).get('expire_time', 300),
+    max_size=config.get('cache', {}).get('max_size', 1000)
+)
 
 def process(url: str, brief_len: int, **kwargs) -> str:
     """处理网页内容"""
+    # 检查缓存配置是否启用
+    if config.get('cache', {}).get('enabled', True):
+        cached = cache.get(url)
+        if cached:
+            return cached
 
     adapter_cls: model.SiteAdapterBase = model.SiteAdapterBase
 
@@ -42,4 +63,8 @@ def process(url: str, brief_len: int, **kwargs) -> str:
     else:
         raise Exception(processed.get('message', "error"))
 
+    # 存入缓存
+    if config.get('cache', {}).get('enabled', True):
+        cache.set(url, text)
+        
     return text

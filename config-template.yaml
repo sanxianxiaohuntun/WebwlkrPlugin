@@ -2,3 +2,33 @@
 # native: Webwlkr自有算法
 # webpilot: ChatGPT的WebPilot插件接口
 backend: native
+
+# 缓存配置
+cache:
+  enabled: true
+  expire_time: 300  # 缓存过期时间(秒)
+  max_size: 1000    # 最大缓存条目数
+
+# 请求配置  
+request:
+  timeout: 10
+  max_retries: 3
+  retry_delay: 1
+  user_agent_rotation: true
+
+# 站点适配器配置
+site_adapters:
+  github:
+    enabled: true
+  bilibili:
+    enabled: true
+    video:
+      max_briefs: 5  # 最多提取信息数
+  stackoverflow:
+    enabled: true
+  bbc:
+    enabled: true
+  youtube:
+    enabled: true
+    video:
+      max_description: 1000  # 描述最大长度
