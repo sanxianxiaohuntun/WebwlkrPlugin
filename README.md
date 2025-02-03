@@ -2,7 +2,7 @@
 
 [QChatGPT 项目](https://github.com/RockChinQ/QChatGPT)的联网插件，基于GPT的Function Calling功能实现的类似ChatGPT的`WebPilot`插件的功能。
 
-![Webwlkr插件](https://github.com/RockChinQ/QChatGPT/blob/master/res/screenshots/webwlkr_plugin.png?raw=true)
+## 新增多项支持，哔哩哔哩、bbc、csdn、juejun、npm、youtube、qq、sina、stackoverflow
 
 > 请先阅读[此Wiki](https://github.com/RockChinQ/QChatGPT/wiki/%E6%8F%92%E4%BB%B6%E4%BD%BF%E7%94%A8-%E5%86%85%E5%AE%B9%E5%87%BD%E6%95%B0)
 
